@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   backend:
     build: ./micro-services/backend
@@ -6,6 +5,9 @@ services:
       - "5000:5000"
     env_file:
       - "./micro-services/backend/.env"
+    volumes:
+      - ./micro-services/backend:/app
+    command: npm run dev
     depends_on:
       - mongo
       - redis
@@ -15,7 +17,7 @@ services:
   mongo:
     image: mongo:6
     ports:
-      - "27017:27017"
+      - "27018:27017"
     env_file:
       - "./.env"
     environment:

@@ -2,9 +2,12 @@ import dotenv from 'dotenv'
 dotenv.config()
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import { urlencoded } from 'express'; 
+import { urlencoded } from 'express';
+import { connectMongoDb } from './config/db.config.js'; 
 
 const app = express()
+console.log('Connecting to:', process.env.USER_MONGO_URI);
+connectMongoDb()
 
 app.use(express.json())
 app.use(cookieParser())
