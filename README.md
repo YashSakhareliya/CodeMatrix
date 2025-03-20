@@ -83,6 +83,6 @@ Please ensure your code follows the project’s style and includes tests where a
 For questions or suggestions, reach out to Yash Sakhareliya via [GitHub Issues](https://github.com/yashsakhareliya/CodeMatrix/issues) or directly.
 
 ## License
-This project is open-source under the [MIT License](LICENSE) (to be added).
+This project is open-source under the [MIT License](LICENSE).
 
 ---
