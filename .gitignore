@@ -1,0 +1,95 @@
+# .gitignore for MERN Stack (Node, React, Tailwind, Docker)
+
+### Node ###
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.env*.local
+.env
+.env.development
+.env.production
+.env.test
+.cache
+.next
+
+### React ###
+# Build directories
+build/
+dist/
+out/
+.next/
+.turbo/
+
+# Generated files
+*.css.map
+*.js.map
+*.d.ts
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+
+### Docker ###
+docker-compose.override.yml
+docker-data/
+.dockerignore
+docker-compose*.yml.swp
+docker/logs/*
+
+### MongoDB ###
+/data/db/
+*.ns
+*.0
+*.1
+
+### OS generated files ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+### Editor directories and files ###
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+### Logs ###
+*.log
+logs/
+yarn-debug.log*
+
+### Testing ###
+coverage/
+.nyc_output/
+jest*.config.js
+
+### Tailwind CSS ###
+.tailwindcss
+.postcss-html
+
+### Miscellaneous ###
+*.bak
+*.patch
+*.diff
+*.error
+*.dump
+*.pid
+*.seed
+*.pid.lock
+.sass-cache/
+.intermediate-files/
+.cache/
+.tmp/
+temp/
