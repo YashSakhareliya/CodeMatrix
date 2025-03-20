@@ -14,7 +14,7 @@ CodeMatrix is a Learning Management System (LMS) designed to empower coding educ
 ## Project Structure
 ```
 CodeMatrix/
-├── services/
+├── micro-services/
 │   ├── backend/          # Core API for users, submissions, and problems
 │   ├── code-executor/    # Service for running user code in sandboxes
 │   ├── instructor/       # Instructor tools for problem and group management
@@ -45,13 +45,13 @@ CodeMatrix/
    ```
 
 2. **Configure Environment**:
-   - Copy `.env` examples from each service folder (`services/backend/.env`, etc.) and fill in values (e.g., MongoDB and Redis URLs).
+   - Copy `.env` examples from each service folder (`micro-services/backend/.env`, etc.) and fill in values (e.g., MongoDB and Redis URLs).
 
 3. **Run Locally**:
    ```bash
    docker-compose up --build
    ```
-   - Access services:
+   - Access micro-services:
      - Backend: `http://localhost:5000`
      - Code Executor: `http://localhost:7000`
      - Instructor: `http://localhost:6000`

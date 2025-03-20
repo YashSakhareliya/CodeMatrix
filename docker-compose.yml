@@ -1,0 +1,45 @@
+version: '3.9'
+services:
+  backend:
+    build: ./micro-services/backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - "./micro-services/backend/.env"
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - lms-network
+    
+  mongo:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    env_file:
+      - "./.env"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - mongodata:/data/db
+    networks:
+      - lms-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    networks:
+      - lms-network
+
+volumes:
+  mongodata:
+  redisdata:
+
+networks:
+  lms-network:
+    driver: bridge
+
