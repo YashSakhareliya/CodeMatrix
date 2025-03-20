@@ -6,7 +6,6 @@ import { urlencoded } from 'express';
 import { connectMongoDb } from './config/db.config.js'; 
 
 const app = express()
-console.log('Connecting to:', process.env.USER_MONGO_URI);
 connectMongoDb()
 
 app.use(express.json())
@@ -14,6 +13,7 @@ app.use(cookieParser())
 app.use(urlencoded({ extended: true }))
 
 app.get('/', (req, res)=>{
+    console.log("Chnage Done On Running")
     res.send("Hello world! with dockers!")
 })
 
