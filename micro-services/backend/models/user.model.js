@@ -1,5 +1,5 @@
 import mongoose  from "mongoose";
-import bcrypt from "bcrypt";
+import argon2 from 'argon2';
 import jwt from "jsonwebtoken";
 
 const userSchema = new mongoose.Schema({
@@ -69,10 +69,11 @@ userSchema.methods.generateAuthToken = function () {
 }
 
 userSchema.methods.comparePassword = async function (password) {
-    return await bcrypt.compare(password, this.password);
+    return await argon2.verify(this.password, password);
 }
+
 userSchema.statics.hashPassword = async function (password) {
-    return await bcrypt.hash(password, 10);
+    return await argon2.hash(password);
 }
 
 const User = mongoose.model("User", userSchema);
