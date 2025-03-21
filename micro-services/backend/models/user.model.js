@@ -54,12 +54,31 @@ const userSchema = new mongoose.Schema({
         type: String,
         trim: true,
     },
-    instructor: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Instructor"
+    activeInstructors: [{
+        type: ObjectId, 
+        required: true
+    }],
+    currentInstructor: {
+        type: ObjectId, 
+        required: false, 
+        default: null
+    },
+    instructorsHistory: [{
+        instructorId: {
+          type: ObjectId, 
+          required: true
         },
-    ],
+        joinedAt: {
+          type: Date,
+          required: true,
+          default: Date.now
+        },
+        leftAt: {
+          type: Date,
+          required: false,
+          default: null
+        }
+    }],
     createdAt: { type: Date, default: Date.now }
 })
 
