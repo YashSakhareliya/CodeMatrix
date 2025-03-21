@@ -9,8 +9,7 @@ const authUser = async (req, res, next) => {
         return res.status(401).json({ message: 'Unauthorized access' });
     }
 
-    const isBlackListed = await blacklistTokenModel.findOne({ token: token});
-
+    const isBlackListed = await blacklistTokenModel.findOne({ token: token });
     if(isBlackListed) {
         return res.status(401).json({ message: 'Unauthorized access' });
     }
@@ -19,7 +18,7 @@ const authUser = async (req, res, next) => {
         
         const decode = jwt.verify(token, process.env.JWT_SECRET);
 
-        const user = await userModel.findById(decode._id);console.log(user);
+        const user = await userModel.findById(decode._id);
         req.user = user;
         next();
     }

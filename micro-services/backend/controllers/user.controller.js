@@ -1,5 +1,6 @@
 import userModel from "../models/user.model.js";
 import userService from "../services/user.service.js";
+import blacklistTokenModel from "../models/blacklistToken.model.js";
 
 const registerUser = async (req, res) => {
     try {
@@ -65,6 +66,17 @@ const loginUser = async (req, res) => {
     }
 }
 
+const logoutUser = async (req, res) => {
+    try {
+        res.clearCookie('token');
+        const token = req.cookies.token || req.headers.authorization.split(' ')[ 1 ];
+        await blacklistTokenModel.create({ token: token});
+        res.json({ message: 'Logged out successfully' });
+    } catch (error) {
+        console.error('Error in logoutUser:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
 const userProfile = async (req, res) => {
     try {
         const user = req.user;
@@ -74,4 +86,4 @@ const userProfile = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
-export { registerUser, loginUser, userProfile };
+export { registerUser, loginUser, userProfile, logoutUser };
