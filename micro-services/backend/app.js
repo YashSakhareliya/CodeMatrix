@@ -13,7 +13,6 @@ app.use(cookieParser())
 app.use(urlencoded({ extended: true }))
 
 app.get('/', (req, res)=>{
-    console.log("Chnage Done On Running")
     res.send("Hello world! with dockers!")
 })
 
