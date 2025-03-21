@@ -86,4 +86,13 @@ const userProfile = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
-export { registerUser, loginUser, userProfile, logoutUser };
+
+const userDashboard = async (req, res) => {
+    try {
+        // pending
+    } catch (error) {
+        console.error('Error in userDashboard:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+export { registerUser, loginUser, userProfile, logoutUser, userDashboard };
