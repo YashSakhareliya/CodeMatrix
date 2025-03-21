@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
     },
     profilePicture: {
         type: String,
-        default: "/images/about-auctionoasis-logo/clock.png",
+        default: "",
     },
     bio: {
         type: String,

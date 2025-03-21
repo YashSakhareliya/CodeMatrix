@@ -12,6 +12,11 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(urlencoded({ extended: true }))
 
+
+// import routes 
+import userRoute from './routes/user.route.js'
+
+app.use('/user', userRoute)
 app.get('/', (req, res)=>{
     res.send("Hello world! with dockers!")
 })
