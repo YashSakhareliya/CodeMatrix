@@ -9,8 +9,8 @@ import Dashboard from "./pages/Students/Dashboard";
 // import Leaderboard from "./pages/Leaderboard";
 // import Groups from "./pages/Groups";
 // import Practice from "./pages/Practice";
-import StudentLogin from "./pages/auth/StudentLogin";
-// import StudentRegister from "./pages/auth/StudentRegister";
+import {StudentLogin} from "./pages";
+import {StudentRegister} from "./pages";
 // import InstructorLogin from "./pages/auth/InstructorLogin";
 // import InstructorRegister from "./pages/auth/InstructorRegister";
 import { InstructorDashboard } from "./pages";
@@ -21,8 +21,8 @@ const router = createBrowserRouter(
       {/* Authentication Routes */}
       <Route element={<AuthLayout />}>
         <Route path="/student/login" element={<StudentLogin />} />
-        {/* <Route path="/student/register" element={<StudentRegister />} />
-        <Route path="/instructor/login" element={<InstructorLogin />} />
+        <Route path="/student/register" element={<StudentRegister />} />
+        {/* <Route path="/instructor/login" element={<InstructorLogin />} />
         <Route path="/instructor/register" element={<InstructorRegister />} /> */}
       </Route>
 
