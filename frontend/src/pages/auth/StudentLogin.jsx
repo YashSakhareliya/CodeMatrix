@@ -4,38 +4,48 @@ import { Mail, Lock, ArrowRight, Code2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { loginSuccess } from '../../store/authSlice';
+import axios from 'axios'
 
 const StudentLogin = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (email === 'admin@example.com' && password === 'password') {
-      setEmail('');
-      setPassword('');
-      // update with backend
-      const userData = {
-        id: 1,
-        name: 'Admin',
-        email: 'admin@example.com',
-        role: 'student',
-        token : 'xyz',
-        user: {
-          id: 1,
-          name: 'Admin',
-          email: 'admin@example.com',
-          role:'student'
+
+    const userData = {
+      email: email,
+      password: password
+    }
+
+    try {
+      const response = await axios.post(`{import.meta.env.VITE_BASE_URL}/user/login`, userData);
+      if (response.status === 201) {
+        const user = {
+          user: response.data.user,
+          token: response.data.token,
+          role: 'student'
         }
+        dispatch(loginSuccess(user))
+        setEmail("")
+        setPassword("")
+        setError("")
+        navigate('/')
+      }else {
+        setError(response.data.message)
+        setEmail("")
+        setPassword("")
+        navigate('student/login')
       }
-       
-      dispatch(loginSuccess(userData))
-      navigate('/');
-      
-    } else {
-      alert('Invalid credentials');
+
+    } catch (error) {
+      setEmail("")
+      setPassword("")
+      setError("Internal server error")
+      navigate('student/login')
     }
   }
 

@@ -1,11 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+const loadState = () => {
+    try {
+        const serializedState = localStorage.getItem('authState');
+        if (serializedState === null) {
+            return undefined;
+        }
+        return JSON.parse(serializedState);
+    } catch (err) {
+        return undefined;
+    }
+};
+
+const initialState = loadState() || {
     isAuthenticated: false,
     user: null,
-    token: localStorage.getItem('token') || null,
-    role: localStorage.getItem("role") || null,  // 'student' or 'instructor'
-}
+    token: null,
+    role: null,
+};
 
 const authSlice = createSlice({
     name: 'auth',
@@ -16,19 +28,17 @@ const authSlice = createSlice({
             state.user = action.payload.user;
             state.token = action.payload.token;
             state.role = action.payload.role;
-            localStorage.setItem("token", action.payload.token);
-            localStorage.setItem("role", action.payload.role);
+            localStorage.setItem('authState', JSON.stringify(state));
         },
         logout: (state) => {
             state.isAuthenticated = false;
             state.user = null;
             state.token = null;
             state.role = null;
-            localStorage.removeItem("token");
-            localStorage.removeItem("role");
+            localStorage.removeItem('authState');
         },
-    }
-})
+    },
+});
 
 export const { loginSuccess, logout } = authSlice.actions;
-export default authSlice.reducer
+export default authSlice.reducer;
