@@ -5,6 +5,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
   const { isAuthenticated, role } = useSelector((state) => state.auth);
 
   if (!isAuthenticated || !allowedRoles.includes(role)) {
+    console.log(`Role ${role} not allowed`)
     return <Navigate to="/student/login" />;
   }
 
