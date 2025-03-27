@@ -22,7 +22,7 @@ const StudentLogin = () => {
     }
 
     try {
-      const response = await axios.post(`{import.meta.env.VITE_BASE_URL}/user/login`, userData);
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/login`, userData);
       if (response.status === 201) {
         const user = {
           user: response.data.user,
@@ -38,14 +38,14 @@ const StudentLogin = () => {
         setError(response.data.message)
         setEmail("")
         setPassword("")
-        navigate('student/login')
+        navigate('/student/login');
       }
 
     } catch (error) {
       setEmail("")
       setPassword("")
       setError("Internal server error")
-      navigate('student/login')
+      navigate('/student/login')
     }
   }
 

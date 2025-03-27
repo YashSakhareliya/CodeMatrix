@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, ArrowRight, Code2 } from 'lucide-react';
-import { useDispatch } from 'react-redux';
 import axios from 'axios';
 
 const StudentRegister = () => {
@@ -29,12 +28,6 @@ const StudentRegister = () => {
         try {
             const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/register`, userData);
             if (response.status === 201) {
-                const user = {
-                    user: response.data.user,
-                    token: response.data.token,
-                    role: 'student'
-                }
-                dispatch(loginSuccess(user));
                 setName("");
                 setEmail("");
                 setPassword("");

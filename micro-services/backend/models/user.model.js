@@ -1,8 +1,10 @@
-import mongoose  from "mongoose";
+import mongoose from "mongoose";
 import argon2 from 'argon2';
 import jwt from "jsonwebtoken";
 
-const userSchema = new mongoose.Schema({
+const { Schema, model, Types } = mongoose; // Destructure Types to use ObjectId
+
+const userSchema = new Schema({
     name: {
         type: String,
         required: true,
@@ -55,17 +57,17 @@ const userSchema = new mongoose.Schema({
         trim: true,
     },
     activeInstructors: [{
-        type: ObjectId, 
+        type: Types.ObjectId,  
         required: true
     }],
     currentInstructor: {
-        type: ObjectId, 
+        type: Types.ObjectId, 
         required: false, 
         default: null
     },
     instructorsHistory: [{
         instructorId: {
-          type: ObjectId, 
+          type: Types.ObjectId,  
           required: true
         },
         joinedAt: {
@@ -95,6 +97,6 @@ userSchema.statics.hashPassword = async function (password) {
     return await argon2.hash(password);
 }
 
-const User = mongoose.model("User", userSchema);
+const User = model("User", userSchema);
 
 export default User;
