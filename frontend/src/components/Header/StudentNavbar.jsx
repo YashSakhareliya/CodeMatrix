@@ -25,15 +25,15 @@ const StudentNavbar = ({ profileOpen, setProfileOpen, sidebarOpen, setSidebarOpe
 
       <div className="flex items-center gap-6">
         <select className="bg-matrix-bg-tertiary text-matrix-text-secondary px-4 py-2 rounded-lg border border-matrix-border-primary focus:border-matrix-border-highlight outline-none">
-          <option>Student</option>
-          <option>Instructor</option>
+          <option selected>Select Instructor</option>
+          <option>Instructor 1</option>
+          <option>Instructor 2</option>
         </select>
 
         <button className="p-2 hover:bg-matrix-bg-tertiary rounded-full transition-colors">
           <Bell className="h-5 w-5" />
         </button>
 
-        {/*  */}
         <StudentProfileIcon
         profileOpen={profileOpen}
         setProfileOpen={setProfileOpen}
