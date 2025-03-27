@@ -4,7 +4,7 @@ import { StudentStats, AssignmentList } from "../../components";
 const onAssignmentSelect = () => {
   // Your code here to handle assignment selection
 }
-export default function Dashboard() {
+export default function Dashboard({instructor}) {
   const [activeTab, setActiveTab] = useState("problems");
   const [filter, setFilter] = useState("all");
 

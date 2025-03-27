@@ -1,12 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Bell, ChevronDown, User, Settings, LogOut, Code2, Menu } from 'lucide-react';
 import StudentProfileIcon from './StudentProfileIcon';
+import { useDispatch, useSelector } from 'react-redux';
 
 const onLogout = () => {
   // Your logout logic here
   console.log('LogOut button clicked');
 }
-const StudentNavbar = ({ profileOpen, setProfileOpen, sidebarOpen, setSidebarOpen }) => {
+
+// instructor change
+
+const StudentNavbar = ({ 
+  profileOpen, 
+  setProfileOpen, 
+  sidebarOpen, 
+  setSidebarOpen,
+ }) => {
+
+  const dispatch = useDispatch();
+  const { user, token } = useSelector((state) => state.auth); // Get user and token from Redux
+  const currentInstructor = user?.currentInstructor || '';
+
+  const handleInstructorChange = (e) => {
+    e.preventDefault();
+    const newInstructor = e.target.value;
+    // change in backend currentInstructor
+    try{
+
+      // make backend request to change curInstructor
+
+      // responce give return user
+
+      // update store with return user
+
+      // change currentInstructor
+    }
+    catch(error){
+      console.error(error);
+    }
+  }
+
+  // make find list of activateInstructor List that appears in select option and user can switch on that
   return (
     <div className="border-b border-matrix-border-primary p-4 flex items-center justify-between bg-matrix-bg-secondary">
       <div className="flex items-center gap-2">
@@ -25,6 +59,9 @@ const StudentNavbar = ({ profileOpen, setProfileOpen, sidebarOpen, setSidebarOpe
 
       <div className="flex items-center gap-6">
         <select className="bg-matrix-bg-tertiary text-matrix-text-secondary px-4 py-2 rounded-lg border border-matrix-border-primary focus:border-matrix-border-highlight outline-none">
+          {/* value={currentInstructor}
+              onChange={handleInstructorChange}
+          */}
           <option selected>Select Instructor</option>
           <option>Instructor 1</option>
           <option>Instructor 2</option>
