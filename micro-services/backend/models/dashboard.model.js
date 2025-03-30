@@ -1,44 +1,48 @@
 import mongoose from "mongoose";
+const { Schema, ObjectId } = mongoose;
 
-const dashboardSchema = new mongoose.Schema({
+// Dashboard Schema
+const dashboardSchema = new Schema({
     studentId: {
         type: ObjectId,
-        required: true
+        required: true,
+        ref: 'user', 
     },
     instructorId: {
         type: ObjectId,
-        required: true
+        required: true,
     },
-    groupId: {
+    state: {
+        rank: {
+            type: Number,
+            required: true,
+            default: 0,
+        },
+        problemsSolved: {
+            type: Number,
+            required: true,
+            default: 0,
+        },
+        tasksCompleted: {
+            type: Number,
+            required: true,
+            default: 0,
+        },
+        totalTasks: {
+            type: Number,
+            required: true,
+            default: 0,
+        },
+    },
+    assignments: [{
         type: ObjectId,
-        required: false,
-        default: null
-    },
-    rank: {
-        type: Number,
-        required: true,
-        default: 0 
-    },
-    problemsSolved: {
-        type: Number,
-        required: true,
-        default: 0
-    },
-    tasksCompleted: {
-        type: Number,
-        required: true,
-        default: 0
-    },
-    totalTasks: {
-        type: Number,
-        required: true,
-        default: 0
-    },
+        ref: 'Assignment', 
+    }],
     lastUpdated: {
         type: Date,
         required: true,
-        default: Date.now
-    }
-})
+        default: Date.now,
+    },
+});
 
 export default mongoose.model('Dashboard', dashboardSchema);
