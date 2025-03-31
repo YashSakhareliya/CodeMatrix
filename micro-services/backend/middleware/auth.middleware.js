@@ -5,7 +5,7 @@ import instructorModel from "../models/instructor.model.js";
 
 const authStudent = async (req, res, next) => {
     const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
-
+    console.log(token);
     if(!token) {
         return res.status(401).json({ message: 'Unauthorized access' });
     }
@@ -20,6 +20,9 @@ const authStudent = async (req, res, next) => {
         const decode = jwt.verify(token, process.env.JWT_SECRET);
 
         const student = await studentModel.findById(decode._id);
+        if(!student) {
+            return res.status(401).json({ message: 'Unauthorized access - Not a student' });
+        }
         req.student = student;
         next();
     }
@@ -30,13 +33,14 @@ const authStudent = async (req, res, next) => {
 
 const authInstructor = async (req, res, next) => {
     const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
-
+    console.log(token);
     if(!token) {
         return res.status(401).json({ message: 'Unauthorized access' });
     }
 
     const isBlackListed = await blacklistTokenModel.findOne({ token: token });
     if(isBlackListed) {
+        console.log('Blacklisted')
         return res.status(401).json({ message: 'Unauthorized access' });
     }
 
