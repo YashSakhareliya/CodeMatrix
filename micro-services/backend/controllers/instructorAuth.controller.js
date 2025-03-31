@@ -3,10 +3,10 @@ import blacklistTokenModel from "../models/blacklistToken.model.js";
 
 const registerInstructor = async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { name, email, password } = req.body;
 
         // Validate inputs
-        if (!username || !email || !password) {
+        if (!name || !email || !password) {
             return res.status(400).json({ message: 'Please provide all required fields' });
         }
 
@@ -25,7 +25,7 @@ const registerInstructor = async (req, res) => {
         const hashPassword = await instructorModel.hashPassword(password);
 
         const instructor = await instructorModel.create({ 
-            username, 
+            name, 
             email, 
             password: hashPassword,
             students: []

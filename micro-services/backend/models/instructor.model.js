@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const instructorSchema = new mongoose.Schema({
-    username: {
+    name: {
         type: String,
         required: true,
         unique: true,
@@ -34,5 +34,18 @@ const instructorSchema = new mongoose.Schema({
         default: Date.now
     }
 })
+
+instructorSchema.methods.generateAuthToken = function () {
+    const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, { expiresIn: "24h" });
+    return token;
+}
+
+instructorSchema.methods.comparePassword = async function (password) {
+    return await argon2.verify(this.password, password);
+}
+
+instructorSchema.statics.hashPassword = async function (password) {
+    return await argon2.hash(password);
+}
 
 export default mongoose.model('Instructor', instructorSchema);
