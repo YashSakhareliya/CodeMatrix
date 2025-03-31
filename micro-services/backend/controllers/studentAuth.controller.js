@@ -2,7 +2,7 @@ import userModel from "../models/user.model.js";
 import userService from "../services/user.service.js";
 import blacklistTokenModel from "../models/blacklistToken.model.js";
 
-const registerUser = async (req, res) => {
+const registerStudent = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
@@ -35,7 +35,7 @@ const registerUser = async (req, res) => {
     }
 }
 
-const loginUser = async (req, res) => {
+const loginStudent = async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -66,7 +66,7 @@ const loginUser = async (req, res) => {
     }
 }
 
-const logoutUser = async (req, res) => {
+const logoutStudent = async (req, res) => {
     try {
         res.clearCookie('token');
         const token = req.cookies.token || req.headers.authorization.split(' ')[ 1 ];
@@ -77,7 +77,7 @@ const logoutUser = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
-const userProfile = async (req, res) => {
+const studentProfile = async (req, res) => {
     try {
         const user = req.user;
         res.json(user);
@@ -87,12 +87,5 @@ const userProfile = async (req, res) => {
     }
 }
 
-const userDashboard = async (req, res) => {
-    try {
-        // pending
-    } catch (error) {
-        console.error('Error in userDashboard:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-}
-export { registerUser, loginUser, userProfile, logoutUser, userDashboard };
+
+export { registerStudent, loginStudent, studentProfile, logoutStudent };
