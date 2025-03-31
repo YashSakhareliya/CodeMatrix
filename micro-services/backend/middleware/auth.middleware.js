@@ -1,4 +1,4 @@
-import userModel from "../models/student.model.js";
+import studentModel from "../models/student.model.js";
 import blacklistTokenModel from "../models/blacklistToken.model.js";
 import jwt from 'jsonwebtoken'
 import instructorModel from "../models/instructor.model.js";
@@ -19,8 +19,8 @@ const authStudent = async (req, res, next) => {
         
         const decode = jwt.verify(token, process.env.JWT_SECRET);
 
-        const user = await userModel.findById(decode._id);
-        req.user = user;
+        const student = await studentModel.findById(decode._id);
+        req.student = student;
         next();
     }
     catch (error) {

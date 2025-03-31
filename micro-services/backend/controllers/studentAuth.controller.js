@@ -1,5 +1,5 @@
-import userModel from "../models/student.model.js";
-import userService from "../services/user.service.js";
+import studentModel from "../models/student.model.js";
+import studentService from "../services/user.service.js";
 import blacklistTokenModel from "../models/blacklistToken.model.js";
 
 const registerStudent = async (req, res) => {
@@ -17,20 +17,20 @@ const registerStudent = async (req, res) => {
             return res.status(400).json({ message: 'Please provide a valid email address' });
         }
 
-        // find user not registered
-        const userExist = await userModel.findOne({ email });
-        if (userExist) {
-            return res.status(409).json({ message: 'User already exists' });
+        // find student not registered
+        const studentExists = await studentModel.findOne({ email });
+        if (studentExists) {
+            return res.status(409).json({ message: 'Student already exists' });
         }
 
-        const hashPassword = await userModel.hashPassword(password);
+        const hashPassword = await studentModel.hashPassword(password);
 
-        const user = await userService.createUser({ name, email, password: hashPassword });
-        const token = user.generateAuthToken();
+        const student = await studentService.createStudent({ name, email, password: hashPassword });
+        const token = student.generateAuthToken();
 
-        res.status(201).json({ user, token });
+        res.status(201).json({ student, token });
     } catch (error) {
-        console.error('Error in registerUser:', error);
+        console.error('Error in registerStudent:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 }
@@ -43,25 +43,25 @@ const loginStudent = async (req, res) => {
         if (!email ||!password) {
             return res.status(400).json({ message: 'Please provide email and password' });
         }
-        const user = await userModel.findOne({ email }).select('+password');
+        const student = await studentModel.findOne({ email }).select('+password');
 
-        if(!user){
+        if(!student){
             res.status(401).json({message: 'Invalid email'})
         }
 
-        const isMatch = user.comparePassword(password)
+        const isMatch = student.comparePassword(password)
 
         if(!isMatch){
             res.status(401).json({message: 'Invalid password'})
         }
 
-        const token = user.generateAuthToken();
+        const token = student.generateAuthToken();
         res.cookie('token', token);
-        res.status(201).json({ user, token });
+        res.status(201).json({ student, token });
 
     }
     catch (error) {
-        console.error('Error in loginUser:', error);
+        console.error('Error in loginStudent:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 }
@@ -79,10 +79,10 @@ const logoutStudent = async (req, res) => {
 }
 const studentProfile = async (req, res) => {
     try {
-        const user = req.user;
-        res.json(user);
+        const student = req.student;
+        res.json(student);
     } catch (error) {
-        console.error('Error in userProfile:', error);
+        console.error('Error in studentProfile:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 }

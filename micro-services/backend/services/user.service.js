@@ -1,7 +1,7 @@
-import userModel from "../models/student.model.js";
+import studentModel from "../models/student.model.js";
 import instructorModel from "../models/instructor.model.js";
 
-const createUser = async ({
+const createStudent = async ({
     name,
     email,
     password
@@ -10,21 +10,22 @@ const createUser = async ({
         throw new Error("All fields are required");
     }
 
-    const user = await userModel.create({name, email, password});
-    return user;
+    const student = new studentModel({name, email, password});
+    await student.save();
+    return student;
 }
 
 const createInstructor = async ({
-    username,
+    name,
     email,
     password
 }) => {
-    if(!username || !email || !password){
+    if(!name || !email || !password){
         throw new Error("All fields are required");
     }
 
     const instructor = await instructorModel.create({
-        username,
+        name,
         email,
         password,
         students: []
@@ -32,4 +33,4 @@ const createInstructor = async ({
     return instructor;
 }
 
-export default { createUser, createInstructor };
+export default { createStudent, createInstructor };

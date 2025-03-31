@@ -27,7 +27,6 @@ const studentSchema = new Schema({
     },
     uid: {
         type: String,
-        required: true,
         minlength: 6,
         maxlength: 6,
         unique: true,
@@ -98,7 +97,7 @@ studentSchema.pre("save", async function (next) {
         let unique = false;
         while (!unique) {
             const newId = generateUserId(); 
-            const exists = await Student.exists({ uid: newId });
+            const exists = await this.constructor.exists({ uid: newId }); 
             if (!exists) {
                 this.uid = newId;
                 unique = true;

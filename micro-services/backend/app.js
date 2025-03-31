@@ -19,10 +19,10 @@ app.use(cors({
 
 
 // import routes 
-import userAuthRoute from './routes/studentAuth.route.js'
+import studentAuthRoute from './routes/studentAuth.route.js'
 import instructorAuthRoute from './routes/instructorAuth.route.js'
 
-app.use('/auth/student', userAuthRoute)
+app.use('/auth/student', studentAuthRoute)
 app.use('/auth/instructor', instructorAuthRoute)
 app.get('/', (req, res)=>{
     res.send("Hello world! with dockers!")
