@@ -1,4 +1,5 @@
 import userModel from "../models/user.model.js";
+import instructorModel from "../models/instructor.model.js";
 
 const createUser = async ({
     name,
@@ -13,4 +14,22 @@ const createUser = async ({
     return user;
 }
 
-export default { createUser };
+const createInstructor = async ({
+    username,
+    email,
+    password
+}) => {
+    if(!username || !email || !password){
+        throw new Error("All fields are required");
+    }
+
+    const instructor = await instructorModel.create({
+        username,
+        email,
+        password,
+        students: []
+    });
+    return instructor;
+}
+
+export default { createUser, createInstructor };
