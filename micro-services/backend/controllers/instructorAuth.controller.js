@@ -71,9 +71,11 @@ const loginInstructor = async (req, res) => {
 
 const logoutInstructor = async (req, res) => {
     try {
+        const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+        if (token) {
+            await blacklistTokenModel.create({ token: token });
+        }
         res.clearCookie('token');
-        const token = req.cookies.token || req.headers.authorization.split(' ')[1];
-        await blacklistTokenModel.create({ token: token });
         res.json({ message: 'Logged out successfully' });
     } catch (error) {
         console.error('Error in logoutInstructor:', error);
