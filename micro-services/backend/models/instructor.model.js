@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
+import argon2 from 'argon2';
+import jwt from "jsonwebtoken";
 
+const { Schema, model, Types, ObjectId } = mongoose;
 const instructorSchema = new mongoose.Schema({
     name: {
         type: String,

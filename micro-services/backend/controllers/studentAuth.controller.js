@@ -1,4 +1,4 @@
-import userModel from "../models/user.model.js";
+import userModel from "../models/student.model.js";
 import userService from "../services/user.service.js";
 import blacklistTokenModel from "../models/blacklistToken.model.js";
 

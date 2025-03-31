@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 import argon2 from 'argon2';
 import jwt from "jsonwebtoken";
+import { customAlphabet } from 'nanoid';
 
-const { Schema, model, Types } = mongoose; // Destructure Types to use ObjectId
+const { Schema, model, Types } = mongoose;
+const generateUserId = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz', 6);
 
-const userSchema = new Schema({
+const studentSchema = new Schema({
     name: {
         type: String,
         required: true,
@@ -22,6 +24,13 @@ const userSchema = new Schema({
         required: true,
         minlength: 6,
         select: false,
+    },
+    uid: {
+        type: String,
+        required: true,
+        minlength: 6,
+        maxlength: 6,
+        unique: true,
     },
     profilePicture: {
         type: String,
@@ -84,19 +93,34 @@ const userSchema = new Schema({
     createdAt: { type: Date, default: Date.now }
 })
 
-userSchema.methods.generateAuthToken = function () {
+studentSchema.pre("save", async function (next) {
+    if (!this.uid) {
+        let unique = false;
+        while (!unique) {
+            const newId = generateUserId(); 
+            const exists = await Student.exists({ uid: newId });
+            if (!exists) {
+                this.uid = newId;
+                unique = true;
+            }
+        }
+    }
+    next();
+});
+
+studentSchema.methods.generateAuthToken = function () {
     const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, { expiresIn: "24h" });
     return token;
 }
 
-userSchema.methods.comparePassword = async function (password) {
+studentSchema.methods.comparePassword = async function (password) {
     return await argon2.verify(this.password, password);
 }
 
-userSchema.statics.hashPassword = async function (password) {
+studentSchema.statics.hashPassword = async function (password) {
     return await argon2.hash(password);
 }
 
-const User = model("User", userSchema);
+const Student = model("Student", studentSchema);
 
-export default User;
+export default Student;

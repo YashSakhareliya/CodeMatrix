@@ -1,4 +1,4 @@
-import userModel from "../models/user.model.js";
+import userModel from "../models/student.model.js";
 import blacklistTokenModel from "../models/blacklistToken.model.js";
 import jwt from 'jsonwebtoken'
 import instructorModel from "../models/instructor.model.js";
