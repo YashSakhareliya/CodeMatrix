@@ -1,4 +1,4 @@
-import groupModel from '../models/group.models.js'
+import groupModel from '../models/group.model.js'
 
 const getStudents = async (groupId) => {
     if(!groupId){

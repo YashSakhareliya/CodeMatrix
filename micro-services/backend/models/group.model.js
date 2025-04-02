@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+const { Schema, ObjectId } = mongoose;
 
 const groupSchema = new mongoose.Schema({
     name: {

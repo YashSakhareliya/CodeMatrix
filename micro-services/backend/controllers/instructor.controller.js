@@ -2,7 +2,7 @@ import dashboardModel from "../models/dashboard.model.js";
 import studentModel from "../models/student.model.js";
 import instructorModel from "../models/instructor.model.js";
 import assignmentModel from "../models/assignment.model.js";
-import groupModel from "../models/group.models.js";
+import groupModel from "../models/group.model.js";
 import { getStudents } from "../services/assignment.service.js";
 
 const joinStudent = async (req, res) => {
@@ -35,11 +35,11 @@ const joinStudent = async (req, res) => {
         if (isStudentJoined) {
             return res.status(400).json({ message: 'Student already joined by this instructor' });
         }
-
+        let group;
         // Check if this is the instructor's first student
         if (instructor.students.length === 0) {
             // Create a new group named "All Students"
-            const group = new groupModel({
+            group = new groupModel({
                 name: "All Students",
                 instructorId: instructorId,
                 students: [studentId]
@@ -47,7 +47,7 @@ const joinStudent = async (req, res) => {
             await group.save();
         } else {
             // Add the student to the existing "All Students" group
-            const group = await groupModel.findOne({ name: "All Students", instructorId: instructorId });
+            group = await groupModel.findOne({ name: "All Students", instructorId: instructorId });
             if (group) {
                 group.students.push(studentId);
                 await group.save();
@@ -68,7 +68,7 @@ const joinStudent = async (req, res) => {
         await instructor.save();
 
         // Return Dashboard and Student
-        return res.status(200).json({ dashboard, student, instructor });
+        return res.status(200).json({ dashboard, student, instructor, group });
 
     } catch (error) {
         console.error('Error in joinStudent:', error);
