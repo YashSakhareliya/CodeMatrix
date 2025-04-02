@@ -2,7 +2,7 @@ import dashboardModel from "../models/dashboard.model.js";
 import studentModel from "../models/student.model.js";
 import instructorModel from "../models/instructor.model.js";
 import assignmentModel from "../models/assignment.model.js";
-import groupModels from "../models/group.models.js";
+import groupModel from "../models/group.models.js";
 import { getStudents } from "../services/assignment.service.js";
 
 const joinStudent = async (req, res) => {
@@ -10,43 +10,64 @@ const joinStudent = async (req, res) => {
         const { instructorId, studentId } = req.body;
         const loginInstructorId = req.instructor._id.toString();
         if (!instructorId || !studentId) {
-            return res.status(404).json({ message: "Missing Filed - required both filed" })
+            return res.status(404).json({ message: "Missing Filed - required both filed" });
         }
 
         // if request made by another instructor who current not login then access is denied
         if (instructorId !== loginInstructorId) {
             return res.status(403).json({ message: 'Unauthorized access - Not an instructor' });
         }
+
         // instructor not found
         const instructor = await instructorModel.findById(instructorId);
         if (!instructor) {
             return res.status(404).json({ message: 'Instructor not found' });
         }
+
         // student not found
         const student = await studentModel.findById(studentId);
         if (!student) {
             return res.status(404).json({ message: 'Student not found' });
         }
+
         // instructor and student already joined
         const isStudentJoined = instructor.students.includes(studentId);
         if (isStudentJoined) {
             return res.status(400).json({ message: 'Student already joined by this instructor' });
         }
 
-        // if all done then make first student - instructor Dashboard 
-        // create dashboard
+        // Check if this is the instructor's first student
+        if (instructor.students.length === 0) {
+            // Create a new group named "All Students"
+            const group = new groupModel({
+                name: "All Students",
+                instructorId: instructorId,
+                students: [studentId]
+            });
+            await group.save();
+        } else {
+            // Add the student to the existing "All Students" group
+            const group = await groupModel.findOne({ name: "All Students", instructorId: instructorId });
+            if (group) {
+                group.students.push(studentId);
+                await group.save();
+            }
+        }
+
+        // Create dashboard
         const dashboard = await dashboardModel.create({
             instructorId: instructorId,
             studentId: studentId,
+            groupId: [group._id]
         });
-        // in student model update in active instructor
+
+        // Update student and instructor models
         student.activeInstructors.push(instructorId);
         await student.save();
-        // instructor model update student
         instructor.students.push(studentId);
         await instructor.save();
 
-        // return Dashboard and Student
+        // Return Dashboard and Student
         return res.status(200).json({ dashboard, student, instructor });
 
     } catch (error) {
@@ -99,8 +120,12 @@ const removeStudent = async (req, res) => {
         // Remove instructor from student's activeInstructors array
         student.activeInstructors = student.activeInstructors.filter(id => id.toString() !== instructorId);
 
-        // remove Student from All Groups from Instructor Side
-        // ???????
+        // Remove student from all groups associated with the instructor
+        const groups = await groupModel.find({ instructorId });
+        for (const group of groups) {
+            group.students = group.students.filter(id => id.toString() !== studentId);
+            await group.save();
+        }
 
         // If this instructor was the current instructor, reset it
         if (student.currentInstructor?.toString() === instructorId) {

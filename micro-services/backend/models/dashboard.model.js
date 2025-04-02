@@ -13,6 +13,10 @@ const dashboardSchema = new Schema({
         required: true,
         ref: 'instructor', 
     },
+    groupId:[{
+        type: ObjectId,
+        required: false,
+    }],
     state: {
         rank: {
             type: Number,
