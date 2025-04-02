@@ -1,0 +1,33 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --legacy-watch server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YashSakhareliya/CodeMatrix.git"
+  },
+  "author": "Yash Sakhareliya",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/YashSakhareliya/CodeMatrix/issues"
+  },
+  "homepage": "https://github.com/YashSakhareliya/CodeMatrix#readme",
+  "description": "",
+  "dependencies": {
+    "argon2": "^0.41.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-validator": "^7.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.1",
+    "nanoid": "^5.1.5",
+    "nodemon": "^3.1.9"
+  }
+}
