@@ -1,10 +1,11 @@
 import Dashboard from '../models/dashboard.model.js'
+import StudentModel from '../models/student.model.js';
 
 const getDashboard = async (req, res) => {
     try {
         const { instructorId } = req.params;
         const studentId = req.student._id.toString();
-        
+
         // get Dashboard Data
         const dashboardData = await Dashboard.findOne({ instructorId, studentId });
 
@@ -31,4 +32,42 @@ const getDashboard = async (req, res) => {
     }
 }
 
-export { getDashboard };
+const changeCurrentInstructor = async (req, res) => {
+    try {
+        const { instructorId } = req.body;
+        const studentId = req.student._id.toString();
+
+        // check this instructor Id  is in active Instructors list
+        const student = await StudentModel.findByStudentId(studentId);
+
+        if (!student.activeInstructors.includes(instructorId)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Instructor is not an active instructor for this student'
+            });
+        }
+
+        student.currentInstructor = instructorId;
+        await student.save();
+
+        // find those Instructor Dashboard  also
+        const dashboard = await Dashboard.find({ instructorId, studentId });
+
+        res.status(200).json({
+            success: true,
+            message: 'Current instructor updated successfully',
+            student,
+            dashboard
+        });
+    }
+    catch (err) {
+        console.error('Error updating current instructor:', err);
+        res.status(500).json({
+            success: false,
+            message: 'Error updating current instructor',
+            error: err.message
+        });
+    }
+}
+
+export { getDashboard, changeCurrentInstructor };
