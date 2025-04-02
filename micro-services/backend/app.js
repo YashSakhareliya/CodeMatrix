@@ -22,10 +22,12 @@ app.use(cors({
 import studentAuthRoute from './routes/studentAuth.route.js'
 import instructorAuthRoute from './routes/instructorAuth.route.js'
 import instructorService from './routes/instructor.route.js'
+import studentDashboard from './routes/studentDashboard.route.js'
 
 app.use('/auth/student', studentAuthRoute)
 app.use('/auth/instructor', instructorAuthRoute)
 app.use('/instructor', instructorService)
+app.use('/student', studentDashboard)
 app.get('/', (req, res)=>{
     res.send("Hello world! with dockers!")
 })

@@ -1,13 +1,14 @@
-import { body, validationResult }  from 'express-validator';
+import { body, param, validationResult }  from 'express-validator';
 import { ObjectId } from 'mongodb'
 
-const validateObjectId = (fieldName) => {
+const validateObjectId = (fieldName, location = 'body') => {
+    const validator = location === 'body' ? body : param;
+
     return [
-        body(fieldName)
+        validator(fieldName)
             .notEmpty().withMessage(`${fieldName} is required`)
             .custom(value => ObjectId.isValid(value)).withMessage(`Invalid ${fieldName} format`),
 
-        // Middleware to check validation result
         (req, res, next) => {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
