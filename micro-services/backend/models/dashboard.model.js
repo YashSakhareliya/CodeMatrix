@@ -11,6 +11,7 @@ const dashboardSchema = new Schema({
     instructorId: {
         type: ObjectId,
         required: true,
+        ref: 'instructor', 
     },
     state: {
         rank: {
@@ -45,4 +46,6 @@ const dashboardSchema = new Schema({
     },
 });
 
-export default mongoose.model('Dashboard', dashboardSchema);
+const Dashboard = mongoose.model('Dashboard', dashboardSchema);
+
+export default Dashboard;

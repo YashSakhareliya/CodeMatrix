@@ -66,29 +66,11 @@ const studentSchema = new Schema({
     },
     activeInstructors: [{
         type: Types.ObjectId,  
-        required: true
     }],
     currentInstructor: {
         type: Types.ObjectId, 
-        required: false, 
         default: null
     },
-    instructorsHistory: [{
-        instructorId: {
-          type: Types.ObjectId,  
-          required: true
-        },
-        joinedAt: {
-          type: Date,
-          required: true,
-          default: Date.now
-        },
-        leftAt: {
-          type: Date,
-          required: false,
-          default: null
-        }
-    }],
     createdAt: { type: Date, default: Date.now }
 })
 
