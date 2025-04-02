@@ -3,7 +3,7 @@ import Dashboard from '../models/dashboard.model.js'
 const getDashboard = async (req, res) => {
     try {
         const { instructorId } = req.params;
-        const studentId = req.user._id;
+        const studentId = req.student._id.toString();
         
         // get Dashboard Data
         const dashboardData = await Dashboard.findOne({ instructorId, studentId });

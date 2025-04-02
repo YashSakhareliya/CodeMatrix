@@ -46,7 +46,7 @@ const joinStudent = async (req, res) => {
 
         // return Dashboard and Student
         return res.status(200).json({ dashboard, student, instructor });
-        
+
     } catch (error) {
         console.error('Error in joinStudent:', error);
         return res.status(500).json({
@@ -124,4 +124,8 @@ const removeStudent = async (req, res) => {
     }
 }
 
-export { joinStudent, removeStudent };
+const giveAssignment = async (req, res) => {
+
+}
+
+export { joinStudent, removeStudent, giveAssignment };
