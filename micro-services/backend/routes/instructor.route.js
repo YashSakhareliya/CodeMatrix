@@ -6,12 +6,21 @@ import { joinStudent, removeStudent, giveAssignment } from '../controllers/instr
 const router = express.Router();
 
 
-router.post('/join', authMiddleware.authInstructor,
+router.post('/join', 
+    authMiddleware.authInstructor,
     validateObjectId('instructorId'),
     validateObjectId('studentId'),
     joinStudent)
-router.post('/remove', authMiddleware.authInstructor, removeStudent)
+router.post('/remove', 
+    authMiddleware.authInstructor,
+    validateObjectId('instructorId'),
+    validateObjectId('studentId'), 
+    removeStudent)
 
-router.post('/assignment', authMiddleware.authInstructor,giveAssignment)
+router.post('/assignment', 
+    authMiddleware.authInstructor,
+    validateObjectId('instructorId'),
+    validateObjectId('groupId'),
+    giveAssignment)
 
 export default router;

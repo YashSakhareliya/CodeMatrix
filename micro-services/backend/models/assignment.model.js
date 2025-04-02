@@ -34,8 +34,13 @@ const assignmentSchema = new Schema({
     }],
     students: [{
         type: ObjectId,
-        ref: 'User', 
+        ref: 'student', 
     }],
+    totalTime: {
+        type: Number,
+        required: false,
+        default: null,
+    },
     dueDate: {
         type: Date,
         required: false,

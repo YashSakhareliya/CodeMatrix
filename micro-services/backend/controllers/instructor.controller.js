@@ -1,6 +1,9 @@
 import dashboardModel from "../models/dashboard.model.js";
 import studentModel from "../models/student.model.js";
 import instructorModel from "../models/instructor.model.js";
+import assignmentModel from "../models/assignment.model.js";
+import groupModels from "../models/group.models.js";
+import { getStudents } from "../services/assignment.service.js";
 
 const joinStudent = async (req, res) => {
     try {
@@ -35,7 +38,6 @@ const joinStudent = async (req, res) => {
         const dashboard = await dashboardModel.create({
             instructorId: instructorId,
             studentId: studentId,
-            // other dashboard data
         });
         // in student model update in active instructor
         student.activeInstructors.push(instructorId);
@@ -97,6 +99,9 @@ const removeStudent = async (req, res) => {
         // Remove instructor from student's activeInstructors array
         student.activeInstructors = student.activeInstructors.filter(id => id.toString() !== instructorId);
 
+        // remove Student from All Groups from Instructor Side
+        // ???????
+
         // If this instructor was the current instructor, reset it
         if (student.currentInstructor?.toString() === instructorId) {
             student.currentInstructor = null;
@@ -125,7 +130,67 @@ const removeStudent = async (req, res) => {
 }
 
 const giveAssignment = async (req, res) => {
+    try {
+        const { instructorId, groupId, title, description, difficulty, testCases, dueDate, totalTime } = req.body;
+        const loginInstructorId = req.instructor._id.toString();
 
+        // Verify if the logged-in instructor is making the request
+        if (instructorId !== loginInstructorId) {
+            return res.status(403).json({ message: 'Unauthorized access - Not the correct instructor' });
+        }
+
+        // Validate all required fields
+        if (!title || !difficulty || !testCases || !dueDate || !groupId) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        // Check if dueDate is in the future
+        const currentDate = new Date();
+        if (new Date(dueDate) <= currentDate) {
+            return res.status(400).json({ message: 'Due date must be in the future' });
+        }
+
+        // Get all students based on group ID
+        const students = await getStudents(groupId);
+        if (!students || students.length === 0) {
+            return res.status(404).json({ message: 'No students found in the specified group' });
+        }
+
+        // Create and save the assignment
+        const assignment = new assignmentModel({
+            title,
+            description,
+            instructorId,
+            difficulty,
+            testCases,
+            students,
+            totalTime,
+            dueDate
+        });
+        await assignment.save();
+
+        // Update all student dashboards with the new assignment
+        for (const studentId of students) {
+            const dashboard = await dashboardModel.findOne({ studentId, instructorId });
+            if (dashboard) {
+                dashboard.assignments.push(assignment._id);
+                dashboard.state.totalTasks += 1;
+                await dashboard.save();
+            }
+        }
+
+        return res.status(201).json({
+            message: 'Assignment created and assigned successfully',
+            assignment
+        });
+
+    } catch (error) {
+        console.error('Error in giveAssignment:', error);
+        return res.status(500).json({
+            message: 'Internal server error',
+            error: error.message
+        });
+    }
 }
 
 export { joinStudent, removeStudent, giveAssignment };
