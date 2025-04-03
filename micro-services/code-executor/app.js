@@ -22,4 +22,15 @@ app.get('/', (req, res) => {
     res.send('Hello, Code-executor!')
 })
 
+app.get("/test-redis", async (req, res) => {
+    try {
+        await redis.set("testKey", "Hello, Redis!");
+        const value = await redis.get("testKey");
+        res.json({ message: "Redis Working!", value });
+    } catch (error) {
+        console.error("Redis Error:", error);
+        res.status(500).json({ error: "Redis Error" });
+    }
+});
+
 export default app;
