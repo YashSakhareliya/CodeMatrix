@@ -4,9 +4,11 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from "cors";
 import { urlencoded } from 'express';
+import redis, { connectRedis } from './config/redis.config.js';
 
 
 const app = express()
+connectRedis();
 
 app.use(express.json())
 app.use(cookieParser())
