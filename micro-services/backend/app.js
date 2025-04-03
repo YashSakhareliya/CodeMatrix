@@ -6,6 +6,7 @@ import cors from "cors";
 import redis, { connectRedis } from './config/redis.config.js'
 import { urlencoded } from 'express';
 import { connectMongoDb } from './config/db.config.js'; 
+import Submission from './models/submission.model.js'
 
 const app = express()
 connectMongoDb()

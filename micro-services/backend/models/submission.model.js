@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+const { ObjectId } = mongoose;
 
 const submissionSchema = new mongoose.Schema({
     studentId: {

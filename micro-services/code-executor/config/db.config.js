@@ -9,7 +9,5 @@ const connectMongoDb = async () => {
         .then(() => console.log('MongoDB connected'))
         .catch(err => console.error('Error connecting to MongoDB:', err.message));
 }
-const Submission = mongoose.model('Submission')
 
-export default Submission;
 export { connectMongoDb }
