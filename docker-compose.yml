@@ -22,7 +22,7 @@ services:
       - "./micro-services/code-executor/.env"
     volumes:
       - ./micro-services/code-executor:/app
-      - ./micro-services/code-executor/temp:/temp
+      - ./micro-services/code-executor/temp:/temp:rw
       - /var/run/docker.sock:/var/run/docker.sock
     command: npm run dev
     depends_on:

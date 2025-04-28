@@ -45,39 +45,58 @@ app.post('/api/submit', async (req, res) => {
     const { code, language, testCases } = req.body;
 
     const submissionId = `submission_${Date.now()}`;
-    const codeDir = path.join('/temp', submissionId); // container path
-    const hostTempDir = path.join(process.cwd(), 'temp', submissionId); // host path
+    const hostTempDir = path.join('/temp', submissionId);
+    const codeDir = hostTempDir;
 
     try {
-        await fs.mkdir(codeDir, { recursive: true });
+        await fs.mkdir(hostTempDir, { recursive: true, mode: 0o777 });
+        
+        console.log(`Created directory: ${hostTempDir}`);
+        
+        const tempFiles = await fs.readdir('/temp');
+        console.log('Files in /temp:', tempFiles);
 
         const codeFile = language === 'python' ? 'script.py' : 'script.cpp';
-        await fs.writeFile(path.join(codeDir, codeFile), code);
+        const codeFilePath = path.join(hostTempDir, codeFile);
+        await fs.writeFile(codeFilePath, code, { mode: 0o666 });
+        console.log(`Created code file: ${codeFilePath}`);
+
+        const testCase = testCases && testCases.length > 0 ? testCases[0] : { input: '', expectedOutput: null };
+        const inputFilePath = path.join(hostTempDir, 'input.txt');
+        await fs.writeFile(inputFilePath, testCase.input || '', { mode: 0o666 });
+        console.log(`Created input file: ${inputFilePath}`);
 
         const files = await fs.readdir(codeDir);
         console.log('Files in codeDir:', files);
+        
+        console.log('Host temp directory:', hostTempDir);
+        console.log('Input file path:', inputFilePath);
+        
+        try {
+            const inputFileExists = await fs.access(inputFilePath)
+                .then(() => true)
+                .catch(() => false);
+            console.log('Input file exists:', inputFileExists);
+        } catch (err) {
+            console.error('Error checking input file:', err);
+        }
 
-        const testCase = testCases && testCases.length > 0 ? testCases[0] : { input: '', expectedOutput: null };
-        // Write input file using container path
-        await fs.writeFile(path.join(codeDir, 'input.txt'), testCase.input || '');
-
-        // Docker setup
         const image = language === 'python' ? 'yashsakhareliya/python-executor' : 'yashsakhareliya/cpp-executor';
         const timeout = 5000; // 5 seconds
 
-        // Use host path for Docker volume and input redirection
-        const inputPathOnHost = path.join(hostTempDir, 'input.txt');
-        
-        // FIXED: Override the CMD in the Dockerfile to run the script directly
+        const absoluteHostTempDir = path.resolve(hostTempDir);
+        console.log('Absolute host temp directory:', absoluteHostTempDir);
+
         const dockerCmd = `
             docker run --rm \
-            -v "${hostTempDir}:/app" \
+            -v "${absoluteHostTempDir}:/app" \
             --memory="256m" \
             --cpus="0.5" \
             --network="none" \
             -w /app \
-            ${image} python /app/${codeFile} < "${inputPathOnHost}"
+            ${image} bash -c "ls -la /app && echo 'Contents of input.txt:' && cat /app/input.txt && echo 'Running Python script:' && python /app/${codeFile}"
         `.trim();
+
         console.log(`Executing Docker command: ${dockerCmd}`);
 
         exec(dockerCmd, { timeout }, async (error, stdout, stderr) => {
