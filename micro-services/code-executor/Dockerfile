@@ -1,11 +1,10 @@
-FROM node:18-alpine
+FROM node:18
 WORKDIR /app
 COPY package.json ./
 
-# Add necessary build dependencies for bcrypt
-RUN apk add --no-cache make gcc g++ python3
+# Install dependencies
+RUN apt-get update && apt-get install -y docker.io make gcc g++ python3
 
-# Install dependencies and rebuild bcrypt
 RUN npm install
 RUN npm rebuild bcrypt --build-from-source
 
