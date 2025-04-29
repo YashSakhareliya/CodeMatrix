@@ -29,7 +29,17 @@ const __dirname = dirname(__filename);
 // Path INSIDE the outer container where Node writes files
 const CONTAINER_SUBMISSION_DIR = '/submissions';
 // Path ON THE HOST machine, passed via environment variable
-const HOST_SUBMISSION_DIR = process.env.HOST_SUBMISSION_DIR;
+// Add this near the top of your main Node.js file (e.g., index.js or app.js)
+const HOST_SUBMISSION_DIR_FROM_ENV = process.env.HOST_SUBMISSION_DIR;
+console.log(`***** DEBUG: Raw process.env.HOST_SUBMISSION_DIR = ${HOST_SUBMISSION_DIR_FROM_ENV} *****`);
+
+// Check if it actually looks like an absolute path
+if (HOST_SUBMISSION_DIR_FROM_ENV && !path.isAbsolute(HOST_SUBMISSION_DIR_FROM_ENV)) {
+    console.warn(`***** WARNING: HOST_SUBMISSION_DIR (${HOST_SUBMISSION_DIR_FROM_ENV}) does not seem to be an absolute path! Check docker-compose.yml and PWD resolution. *****`);
+}
+
+// Use this value later...
+const HOST_SUBMISSION_DIR = HOST_SUBMISSION_DIR_FROM_ENV;
 
 if (!HOST_SUBMISSION_DIR) {
     console.error("ERROR: HOST_SUBMISSION_DIR environment variable is not set!");
@@ -69,11 +79,11 @@ app.post('/api/submit', async (req, res) => {
     const hostCodeDir = path.join(HOST_SUBMISSION_DIR, submissionId);
 
     try {
+        // Create directory using the path INSIDE the container
         await fs.mkdir(containerCodeDir, { recursive: true, mode: 0o777 });
         console.log(`Created directory inside container: ${containerCodeDir}`);
         console.log(`Corresponding host directory: ${hostCodeDir}`);
-        
-        
+
         // Determine filenames
         const codeFile = language === 'python' ? 'script.py' : 'script.cpp'; // Add more languages as needed
         const codeFilePath = path.join(containerCodeDir, codeFile);
@@ -82,12 +92,12 @@ app.post('/api/submit', async (req, res) => {
         // Get test case input
         const testCase = testCases && testCases.length > 0 ? testCases[0] : { input: '', expectedOutput: null };
 
-       // Write code and input files using the path INSIDE the container
-       await fs.writeFile(codeFilePath, code, { mode: 0o666 });
-       console.log(`Created code file: ${codeFilePath}`);
-       await fs.writeFile(inputFilePath, testCase.input || '', { mode: 0o666 });
-       console.log(`Created input file: ${inputFilePath}`);
-        
+        // Write code and input files using the path INSIDE the container
+        await fs.writeFile(codeFilePath, code, { mode: 0o666 });
+        console.log(`Created code file: ${codeFilePath}`);
+        await fs.writeFile(inputFilePath, testCase.input || '', { mode: 0o666 });
+        console.log(`Created input file: ${inputFilePath}`);
+
         // --- Prepare for Inner Container ---
         const image = language === 'python' ? 'yashsakhareliya/python-executor' : 'yashsakhareliya/cpp-executor';
         const timeout = 5000; // 5 seconds (consider making this configurable)
@@ -98,9 +108,7 @@ app.post('/api/submit', async (req, res) => {
         // Command to run inside the inner container
         // Ensure the script name matches what you wrote (codeFile)
         // Added error redirection `2>&1` to capture stderr in stdout
-
-        const innerCommand = `bash -c "ls -la /app && echo '---INPUT---' && cat /app/input.txt || echo 'input.txt not found' && echo '---RUNNING---' && python3 /app/${codeFile} 2>&1"`;
-
+        const innerCommand = `bash -c "ls -la /app && echo '---RUNNING SCRIPT---' && python3 /app/${codeFile} < /app/input.txt 2>&1"`;
         const dockerCmd = `
             docker run --rm \
             -v ${volumeMount} \
@@ -168,6 +176,7 @@ app.post('/api/submit', async (req, res) => {
         }
     }
 });
+
 
 
 export default app;
