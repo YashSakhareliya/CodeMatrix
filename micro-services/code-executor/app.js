@@ -25,35 +25,13 @@ app.use(cors({
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// --- Get paths ---
 // Path INSIDE the outer container where Node writes files
 const CONTAINER_SUBMISSION_DIR = '/submissions';
 // Path ON THE HOST machine, passed via environment variable
-// Add this near the top of your main Node.js file (e.g., index.js or app.js)
-const HOST_SUBMISSION_DIR_FROM_ENV = process.env.HOST_SUBMISSION_DIR;
-console.log(`***** DEBUG: Raw process.env.HOST_SUBMISSION_DIR = ${HOST_SUBMISSION_DIR_FROM_ENV} *****`);
-
-// Check if it actually looks like an absolute path
-if (HOST_SUBMISSION_DIR_FROM_ENV && !path.isAbsolute(HOST_SUBMISSION_DIR_FROM_ENV)) {
-    console.warn(`***** WARNING: HOST_SUBMISSION_DIR (${HOST_SUBMISSION_DIR_FROM_ENV}) does not seem to be an absolute path! Check docker-compose.yml and PWD resolution. *****`);
-}
-
-// Use this value later...
-const HOST_SUBMISSION_DIR = HOST_SUBMISSION_DIR_FROM_ENV;
-
-if (!HOST_SUBMISSION_DIR) {
-    console.error("ERROR: HOST_SUBMISSION_DIR environment variable is not set!");
-    process.exit(1); // Exit if the crucial path is missing
-}
-console.log(`Host Submission Directory (for Docker volume): ${HOST_SUBMISSION_DIR}`);
-console.log(`Container Submission Directory (for Node fs): ${CONTAINER_SUBMISSION_DIR}`);
+// Host Dir That Mount to Node Container For Submission
+const HOST_SUBMISSION_DIR = process.env.HOST_SUBMISSION_DIR;
 
 app.get('/', (req, res) => {
-    if (!HOST_SUBMISSION_DIR) {
-        console.log("WARNING: HOST_SUBMISSION_DIR is not set, Docker execution will likely fail.");
-    }
-    console.log(`Host Submission Directory (for Docker volume): ${HOST_SUBMISSION_DIR}`);
-    console.log(`Container Submission Directory (for Node fs): ${CONTAINER_SUBMISSION_DIR}`);
     res.send('Hello, Code-executor!')
 })
 
