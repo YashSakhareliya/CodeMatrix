@@ -6,7 +6,7 @@ const submissionSchema = new mongoose.Schema({
         type: ObjectId, 
         required: true
     },
-    problemId: {
+    assignmentId: {
         type: ObjectId, 
         required: true
     },
