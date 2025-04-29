@@ -113,7 +113,6 @@ app.post('/api/submit', async (req, res) => {
     try {
         // Create directory
         await fs.mkdir(containerCodeDir, { recursive: true, mode: 0o777 });
-        console.log(`Created directory: ${containerCodeDir} (Host: ${hostCodeDir})`);
 
         // Determine code filename and image
         let codeFile = '';
@@ -132,16 +131,13 @@ app.post('/api/submit', async (req, res) => {
 
         // Write the code file ONCE
         await fs.writeFile(codeFilePath, code, { mode: 0o666 });
-        console.log(`Created code file: ${codeFilePath}`);
 
         // Loop through each test case
         for (let i = 0; i < testCases.length; i++) {
             const testCase = testCases[i];
-            console.log(`--- Processing Test Case ${i + 1} ---`);
 
             // Write the input file for the CURRENT test case
             await fs.writeFile(inputFilePath, testCase.input || '', { mode: 0o666 });
-            console.log(`Wrote input file: ${inputFilePath} for test case ${i + 1}`);
 
             // --- Prepare Docker Command for this test case ---
             const timeout = 5000; // 5 seconds per test case
@@ -176,7 +172,6 @@ app.post('/api/submit', async (req, res) => {
                 ${image} ${innerCommand}
             `.trim().replace(/\s+/g, ' ');
 
-            console.log(`Executing Docker command for test case ${i + 1}: ${dockerCmd}`);
 
             // Execute the docker command using the Promise wrapper
             const { error, stdout, stderr } = await executeDockerCommand(dockerCmd, timeout);
@@ -223,10 +218,8 @@ app.post('/api/submit', async (req, res) => {
                 }
             }
             results.push(testResult);
-            console.log(`Finished processing Test Case ${i + 1}. Status: ${testResult.status}`);
         } // End of test case loop
 
-        console.log("Sending final results:", results);
         res.json({ results });
 
     } catch (err) {
@@ -238,9 +231,7 @@ app.post('/api/submit', async (req, res) => {
     } finally {
         // Clean up the submission directory regardless of success or failure
         try {
-            console.log(`Cleaning up directory: ${containerCodeDir}`);
             await fs.rm(containerCodeDir, { recursive: true, force: true });
-            console.log(`Successfully cleaned up ${containerCodeDir}`);
         } catch (cleanupError) {
             console.error(`Error cleaning up directory ${containerCodeDir}: ${cleanupError}`);
         }
