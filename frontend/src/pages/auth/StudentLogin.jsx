@@ -22,7 +22,7 @@ const StudentLogin = () => {
     }
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/login`, userData);
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/auth/student/login`, userData);
       if (response.status === 201) {
         const user = {
           user: response.data.user,
