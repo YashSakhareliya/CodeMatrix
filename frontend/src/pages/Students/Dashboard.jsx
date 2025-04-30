@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { StudentStats, AssignmentList } from "../../components";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("problems");
   const [filter, setFilter] = useState("all");
+  const navigate = useNavigate();
 
   const mockAssignments = [
     {
@@ -103,7 +105,8 @@ function twoSum(nums, target) {
   const onAssignmentSelect = (assignment) => {
     console.log(assignment)
     // check this not due time
-    // open the code-editor
+    // go to Problem View Page
+    navigate('/problem/' + assignment.id, { replace: true });
   }
   return (
     <div className="h-full overflow-y-auto p-6 space-y-6">
