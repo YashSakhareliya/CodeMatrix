@@ -106,7 +106,7 @@ function twoSum(nums, target) {
     console.log(assignment)
     // check this not due time
     // go to Problem View Page
-    navigate('/problem/' + assignment.id, { replace: true });
+    navigate('/problem/' + assignment.id, { replace: true, state: {assignment} });
   }
   return (
     <div className="h-full overflow-y-auto p-6 space-y-6">
