@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { StudentStats, AssignmentList } from "../../components";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-const onAssignmentSelect = () => {
-  // Your code here to handle assignment selection
-}
+
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("problems");
   const [filter, setFilter] = useState("all");
+  const navigate = useNavigate();
 
   const mockAssignments = [
     {
@@ -86,6 +87,13 @@ function twoSum(nums, target) {
     },
   ];
 
+  // make letter
+  const getAssignemnt = () => {
+    // using store get current instructor id
+    // get this user DashBoard
+    // DashBoard Contain All Assignemnt and State
+    // thhis function make in use Effact because if Current Instructor Change then Assignemtn and State Change
+  }
   const mockStats = {
     problemsSolved: 15,
     totalProblems: 30,
@@ -94,6 +102,12 @@ function twoSum(nums, target) {
     rank: "#234",
   };
 
+  const onAssignmentSelect = (assignment) => {
+    console.log(assignment)
+    // check this not due time
+    // go to Problem View Page
+    navigate('/problem/' + assignment.id, { replace: true, state: {assignment} });
+  }
   return (
     <div className="h-full overflow-y-auto p-6 space-y-6">
       <StudentStats name="John Doe" instructor="Dr. Sarah Smith" stats={mockStats} />

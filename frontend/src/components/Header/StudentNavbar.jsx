@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { Bell, ChevronDown, User, Settings, LogOut, Code2, Menu } from 'lucide-react';
 import StudentProfileIcon from './StudentProfileIcon';
 import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../store/authSlice';
 
-const onLogout = () => {
-  // Your logout logic here
-  console.log('LogOut button clicked');
-}
+
 
 // instructor change
 
@@ -20,6 +18,11 @@ const StudentNavbar = ({
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.auth); // Get user and token from Redux
   const currentInstructor = user?.currentInstructor || '';
+
+  const onLogout = () => {
+    // Your logout logic here
+    dispatch(logout())
+  }
 
   const handleInstructorChange = (e) => {
     e.preventDefault();

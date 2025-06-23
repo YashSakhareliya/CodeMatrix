@@ -14,6 +14,25 @@ services:
     networks:
       - lms-network
     
+  code-executor:
+    build: ./micro-services/code-executor
+    ports:
+      - "7000:7000"
+    env_file:
+      - "./micro-services/code-executor/.env"
+    environment:
+      - HOST_SUBMISSION_DIR=${PWD}/micro-services/code-executor/submissions 
+    volumes:
+      - ./micro-services/code-executor:/app
+      - ./micro-services/code-executor/submissions:/submissions:rw 
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: npm run dev
+    depends_on:
+      - backend
+      - redis
+      - mongo
+    networks:
+      - lms-network
   mongo:
     image: mongo:6
     ports:

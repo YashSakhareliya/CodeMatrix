@@ -5,12 +5,12 @@ import ProblemLayout from "./layouts/ProblemLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Students/Dashboard";
-// import ProblemView from "./pages/ProblemView";
+import { ProblemView } from "./pages";
 // import Leaderboard from "./pages/Leaderboard";
 // import Groups from "./pages/Groups";
 // import Practice from "./pages/Practice";
-import {StudentLogin} from "./pages";
-import {StudentRegister} from "./pages";
+import { StudentLogin } from "./pages";
+import { StudentRegister } from "./pages";
 // import InstructorLogin from "./pages/auth/InstructorLogin";
 // import InstructorRegister from "./pages/auth/InstructorRegister";
 import { InstructorDashboard } from "./pages";
@@ -30,14 +30,14 @@ const router = createBrowserRouter(
       <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Dashboard />} />
-           {/* <Route path="/leaderboard" element={<Leaderboard />} />
+          {/* <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/groups" element={<Groups />} />
           <Route path="/practice" element={<Practice />} /> */}
         </Route>
 
         {/* Fullscreen Problem Editor */}
         <Route element={<ProblemLayout />}>
-          {/* <Route path="/problem/:id" element={<ProblemView />} /> */}
+          <Route path="/problem/:id" element={<ProblemView />} />
         </Route>
       </Route>
 

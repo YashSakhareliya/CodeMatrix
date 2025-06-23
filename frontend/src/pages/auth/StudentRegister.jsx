@@ -26,7 +26,7 @@ const StudentRegister = () => {
         }
 
         try {
-            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/register`, userData);
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/auth/student/register`, userData);
             if (response.status === 201) {
                 setName("");
                 setEmail("");

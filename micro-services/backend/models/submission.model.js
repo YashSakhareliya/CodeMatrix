@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
+const { ObjectId } = mongoose;
 
 const submissionSchema = new mongoose.Schema({
     studentId: {
         type: ObjectId, 
         required: true
     },
-    problemId: {
+    assignmentId: {
         type: ObjectId, 
         required: true
     },
