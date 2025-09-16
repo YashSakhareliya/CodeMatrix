@@ -16,7 +16,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(urlencoded({ extended: true }))
 app.use(cors({
-    origin: "http://localhost:5000",
+    origin: "http://localhost:5173",
     credentials: true, 
 }))
 
@@ -26,11 +26,13 @@ import studentAuthRoute from './routes/studentAuth.route.js'
 import instructorAuthRoute from './routes/instructorAuth.route.js'
 import instructorService from './routes/instructor.route.js'
 import studentDashboard from './routes/studentDashboard.route.js'
+import studentAssignemnt from './routes/student.route.js'
 
 app.use('/auth/student', studentAuthRoute)
 app.use('/auth/instructor', instructorAuthRoute)
 app.use('/instructor', instructorService)
 app.use('/student', studentDashboard)
+app.use('/api/student/assignemnt', studentAssignemnt)
 app.get('/', (req, res)=>{
     res.send("Hello world! with dockers!")
 })
