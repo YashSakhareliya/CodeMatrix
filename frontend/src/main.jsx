@@ -4,6 +4,10 @@ import './index.css'
 import App from './App.jsx'
 import { Provider } from 'react-redux'
 import store from './store/store.js'
+import { initializeDummyAuth } from './utils/initializeStore.js'
+
+// Initialize dummy auth data for development
+initializeDummyAuth(store.dispatch);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

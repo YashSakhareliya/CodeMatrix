@@ -37,8 +37,14 @@ const authSlice = createSlice({
             state.role = null;
             localStorage.removeItem('authState');
         },
+        updateCurrentInstructor: (state, action) => {
+            if (state.user) {
+                state.user.currentInstructor = action.payload;
+                localStorage.setItem('authState', JSON.stringify(state));
+            }
+        },
     },
 });
 
-export const { loginSuccess, logout } = authSlice.actions;
+export const { loginSuccess, logout, updateCurrentInstructor } = authSlice.actions;
 export default authSlice.reducer;

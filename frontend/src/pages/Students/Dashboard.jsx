@@ -1,119 +1,92 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StudentStats, AssignmentList } from "../../components";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { 
+  dummyStudent, 
+  getInstructorById, 
+  getAssignmentsByInstructor, 
+  getStatsByInstructor,
+  filterAssignments 
+} from "../../data/dummyData";
 
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("problems");
   const [filter, setFilter] = useState("all");
+  const [assignments, setAssignments] = useState([]);
+  const [stats, setStats] = useState({});
+  const [currentInstructor, setCurrentInstructor] = useState(null);
   const navigate = useNavigate();
+  
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
 
-  const mockAssignments = [
-    {
-      id: 1,
-      type: "problem",
-      title: "Two Sum",
-      group: "Algorithms 101",
-      difficulty: "Easy",
-      deadline: "March 20, 2024",
-      status: "pending",
-      description: `Given an array of integers nums and an integer target, return indices of the two numbers in nums such that they add up to target.
-      
-      You may assume that each input would have exactly one solution, and you may not use the same element twice.
-      
-      You can return the answer in any order.`,
-      examples: [
-        {
-          input: "nums = [2,7,11,15], target = 9",
-          output: "[0,1]",
-          explanation: "Because nums[0] + nums[1] == 9, we return [0, 1].",
-        },
-      ],
-      constraints: [
-        "2 <= nums.length <= 104",
-        "-109 <= nums[i] <= 109",
-        "-109 <= target <= 109",
-        "Only one valid answer exists.",
-      ],
-      timeLimit: 45,
-      instructor: "Dr. Sarah Smith",
-      defaultCode: {
-        javascript: `/**
- * @param {number[]} nums
- * @param {number} target
- * @return {number[]}
- */
-function twoSum(nums, target) {
+  // Use effect to update assignments and stats when instructor changes
+  useEffect(() => {
+    const currentUser = user || dummyStudent;
+    const instructorId = currentUser?.currentInstructor;
     
-};`,
-        python: `def twoSum(nums, target):`,
-      },
-    },
-    {
-      id: 2,
-      type: "problem",
-      title: "Binary Search",
-      group: "Algorithms 101",
-      difficulty: "Easy",
-      deadline: "March 22, 2024",
-      status: "pending",
-      description: "Implement binary search algorithm...",
-      examples: [],
-      constraints: [],
-      timeLimit: 30,
-      instructor: "Dr. Sarah Smith",
-      defaultCode: {
-        javascript: "// Implement binary search here",
-        python: "# Implement binary search here",
-      },
-    },
-    {
-      id: 3,
-      type: "task",
-      title: "Complete Quiz 1",
-      group: "Data Structures",
-      deadline: "March 21, 2024",
-      status: "overdue",
-      description: "Complete the quiz on basic data structures",
-      examples: [],
-      constraints: [],
-      timeLimit: 60,
-      instructor: "Dr. Sarah Smith",
-      defaultCode: {
-        javascript: "",
-        python: "",
-      },
-    },
-  ];
+    if (instructorId) {
+      const instructor = getInstructorById(instructorId);
+      const instructorAssignments = getAssignmentsByInstructor(instructorId);
+      const instructorStats = getStatsByInstructor(instructorId);
+      
+      setCurrentInstructor(instructor);
+      setAssignments(instructorAssignments);
+      setStats(instructorStats);
+    }
+  }, [user]);
 
-  // make letter
-  const getAssignemnt = () => {
-    // using store get current instructor id
-    // get this user DashBoard
-    // DashBoard Contain All Assignemnt and State
-    // thhis function make in use Effact because if Current Instructor Change then Assignemtn and State Change
-  }
-  const mockStats = {
-    problemsSolved: 15,
-    totalProblems: 30,
-    tasksCompleted: 8,
-    totalTasks: 10,
-    rank: "#234",
-  };
+  // Filter assignments based on active tab and filter
+  const filteredAssignments = filterAssignments(assignments, activeTab, filter);
+  
+  // Format assignments for display
+  const formattedAssignments = filteredAssignments.map(assignment => ({
+    ...assignment,
+    id: assignment._id,
+    deadline: new Date(assignment.dueDate).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }),
+    group: currentInstructor?.name || 'Unknown',
+    instructor: currentInstructor?.name || 'Unknown'
+  }));
 
   const onAssignmentSelect = (assignment) => {
-    console.log(assignment)
-    // check this not due time
-    // go to Problem View Page
-    navigate('/problem/' + assignment.id, { replace: true, state: {assignment} });
-  }
+    console.log('Selected assignment:', assignment);
+    
+    // Check if assignment is not overdue or expired
+    const now = new Date();
+    const dueDate = new Date(assignment.dueDate);
+    
+    if (assignment.status === 'expired' || (dueDate < now && assignment.status === 'active')) {
+      alert('This assignment is overdue and cannot be started.');
+      return;
+    }
+    
+    if (assignment.status === 'draft') {
+      alert('This assignment is not yet available.');
+      return;
+    }
+    
+    // Navigate to Problem View Page
+    navigate('/problem/' + assignment._id, { 
+      replace: true, 
+      state: { assignment } 
+    });
+  };
   return (
     <div className="h-full overflow-y-auto p-6 space-y-6">
-      <StudentStats name="John Doe" instructor="Dr. Sarah Smith" stats={mockStats} />
+      <StudentStats 
+        name={(user || dummyStudent)?.name || "Student"} 
+        instructor={currentInstructor?.name || "No Instructor Selected"} 
+        stats={stats} 
+      />
 
       <AssignmentList
-        assignments={mockAssignments}
+        assignments={formattedAssignments}
         activeTab={activeTab}
         filter={filter}
         setActiveTab={setActiveTab}

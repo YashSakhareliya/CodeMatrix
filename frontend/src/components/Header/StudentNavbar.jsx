@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { Bell, ChevronDown, User, Settings, LogOut, Code2, Menu } from 'lucide-react';
 import StudentProfileIcon from './StudentProfileIcon';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../store/authSlice';
+import { logout, updateCurrentInstructor } from '../../store/authSlice';
+import { dummyInstructors, dummyStudent, getInstructorById } from '../../data/dummyData';
 
 
-
-// instructor change
 
 const StudentNavbar = ({ 
   profileOpen, 
@@ -17,7 +16,16 @@ const StudentNavbar = ({
 
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.auth); // Get user and token from Redux
-  const currentInstructor = user?.currentInstructor || '';
+  
+  // Use dummy data if no user in store
+  const currentUser = user || dummyStudent;
+  const currentInstructorId = currentUser?.currentInstructor;
+  const currentInstructor = getInstructorById(currentInstructorId);
+  
+  // Get available instructors for this student
+  const availableInstructors = dummyInstructors.filter(instructor => 
+    currentUser?.activeInstructors?.includes(instructor._id)
+  );
 
   const onLogout = () => {
     // Your logout logic here
@@ -25,23 +33,20 @@ const StudentNavbar = ({
   }
 
   const handleInstructorChange = (e) => {
-    e.preventDefault();
-    const newInstructor = e.target.value;
-    // change in backend currentInstructor
-    try{
-
-      // make backend request to change curInstructor
-
-      // responce give return user
-
-      // update store with return user
-
-      // change currentInstructor
+    const newInstructorId = e.target.value;
+    if (newInstructorId && newInstructorId !== currentInstructorId) {
+      // Update the current instructor in Redux store
+      dispatch(updateCurrentInstructor(newInstructorId));
+      
+      // In a real app, you would make an API call here:
+      // try {
+      //   const response = await updateCurrentInstructorAPI(newInstructorId);
+      //   dispatch(loginSuccess(response.data));
+      // } catch (error) {
+      //   console.error('Failed to update instructor:', error);
+      // }
     }
-    catch(error){
-      console.error(error);
-    }
-  }
+  };
 
   // make find list of activateInstructor List that appears in select option and user can switch on that
   return (
@@ -61,13 +66,17 @@ const StudentNavbar = ({
       </div>
 
       <div className="flex items-center gap-6">
-        <select className="bg-matrix-bg-tertiary text-matrix-text-secondary px-4 py-2 rounded-lg border border-matrix-border-primary focus:border-matrix-border-highlight outline-none">
-          {/* value={currentInstructor}
-              onChange={handleInstructorChange}
-          */}
-          <option selected>Select Instructor</option>
-          <option>Instructor 1</option>
-          <option>Instructor 2</option>
+        <select 
+          className="bg-matrix-bg-tertiary text-matrix-text-secondary px-4 py-2 rounded-lg border border-matrix-border-primary focus:border-matrix-border-highlight outline-none"
+          value={currentInstructorId || ''}
+          onChange={handleInstructorChange}
+        >
+          <option value="" disabled>Select Instructor</option>
+          {availableInstructors.map((instructor) => (
+            <option key={instructor._id} value={instructor._id}>
+              {instructor.name}
+            </option>
+          ))}
         </select>
 
         <button className="p-2 hover:bg-matrix-bg-tertiary rounded-full transition-colors">

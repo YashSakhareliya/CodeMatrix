@@ -30,6 +30,7 @@ const router = createBrowserRouter(
       <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           {/* <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/groups" element={<Groups />} />
           <Route path="/practice" element={<Practice />} /> */}

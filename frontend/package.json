@@ -10,12 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
     "@reduxjs/toolkit": "^2.6.1",
     "axios": "^1.8.4",
     "lucide-react": "^0.484.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",
+    "react-resizable-panels": "^3.0.6",
     "react-router-dom": "^7.4.0"
   },
   "devDependencies": {
