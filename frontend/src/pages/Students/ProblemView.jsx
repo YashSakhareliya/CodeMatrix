@@ -33,7 +33,9 @@ const ProblemView = () => {
 
 
     useEffect(() => {
-        if (!assignment) {
+        // console.log(assignment)
+        if (assignment) {
+            console.log("Assignment found")
             // Find assignment from dummy data using the ID
             const currentUser = user || { currentInstructor: "674a1b2c3d4e5f6789012340" };
             const instructorAssignments = getAssignmentsByInstructor(currentUser.currentInstructor);
@@ -46,7 +48,7 @@ const ProblemView = () => {
                     ...foundAssignment,
                     problems: assignmentProblems
                 };
-                console.log(assignment)
+                // console.log(assignment)
                 setAssignment(assignmentWithProblems);
                 setTimeLeft(foundAssignment.totalTime * 60);
             } else {
@@ -58,11 +60,11 @@ const ProblemView = () => {
         } else {
             setTimeLeft(assignment.totalTime * 60);
         }
-    }, [id, assignment, user]);
+    }, [id, user]);
 
     // Separate effect to handle currentProblem and code initialization
     useEffect(() => {
-        console.log(assignment)
+        // console.log(assignment)
         if (assignment && assignment.problems && assignment.problems.length > 0 && !currentProblem) {
             const firstProblem = assignment.problems[0];
             console.log(firstProblem + " firstProblem ")

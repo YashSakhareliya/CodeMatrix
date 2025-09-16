@@ -4,68 +4,68 @@ import { getProblemsByAssignment } from '../../data/dummyData';
 
 const ProblemOverview = ({ assignment, onStart }) => {
     // Get problems for the assignment if not already included
-    const assignmentProblems = assignment?.problems || getProblemsByAssignment(assignment?._id) || [];
-    
+    const assignmentProblems = getProblemsByAssignment(assignment?._id) || [];
+    // console.log("Assignemnt Problems", assignmentProblems)
     // Dummy assignment data based on backend models
-    const dummyAssignment = assignment || {
-        _id: "674a1b2c3d4e5f6789012345",
-        title: "Data Structures & Algorithms Challenge",
-        description: "This assignment covers fundamental data structures and algorithms concepts including arrays, linked lists, trees, and sorting algorithms. Students will solve multiple problems of varying difficulty levels.",
-        instructorId: {
-            _id: "674a1b2c3d4e5f6789012340",
-            name: "Dr. Sarah Johnson",
-            email: "sarah.johnson@university.edu"
-        },
-        groupId: {
-            _id: "674a1b2c3d4e5f6789012341",
-            name: "CS-301 Advanced Programming",
-            semester: "Fall 2024"
-        },
-        difficulty: "medium",
-        totalTime: 120, // 2 hours
-        startTime: new Date("2024-01-15T09:00:00Z"),
-        dueDate: new Date("2024-01-20T23:59:59Z"),
-        status: "active",
-        maxAttempts: 3,
-        problems: [
-            {
-                _id: "674a1b2c3d4e5f6789012346",
-                title: "Two Sum",
-                difficulty: "easy",
-                points: 100,
-                order: 1,
-                tags: ["array", "hash-table"]
-            },
-            {
-                _id: "674a1b2c3d4e5f6789012347",
-                title: "Binary Tree Traversal",
-                difficulty: "medium",
-                points: 150,
-                order: 2,
-                tags: ["tree", "recursion", "dfs"]
-            },
-            {
-                _id: "674a1b2c3d4e5f6789012348",
-                title: "Merge Sort Implementation",
-                difficulty: "medium",
-                points: 200,
-                order: 3,
-                tags: ["sorting", "divide-conquer", "recursion"]
-            },
-            {
-                _id: "674a1b2c3d4e5f6789012349",
-                title: "Graph Shortest Path",
-                difficulty: "hard",
-                points: 250,
-                order: 4,
-                tags: ["graph", "dijkstra", "dynamic-programming"]
-            }
-        ]
-    };
+    // const dummyAssignment = assignment || {
+    //     _id: "674a1b2c3d4e5f6789012345",
+    //     title: "Data Structures & Algorithms Challenge",
+    //     description: "This assignment covers fundamental data structures and algorithms concepts including arrays, linked lists, trees, and sorting algorithms. Students will solve multiple problems of varying difficulty levels.",
+    //     instructorId: {
+    //         _id: "674a1b2c3d4e5f6789012340",
+    //         name: "Dr. Sarah Johnson",
+    //         email: "sarah.johnson@university.edu"
+    //     },
+    //     groupId: {
+    //         _id: "674a1b2c3d4e5f6789012341",
+    //         name: "CS-301 Advanced Programming",
+    //         semester: "Fall 2024"
+    //     },
+    //     difficulty: "medium",
+    //     totalTime: 120, // 2 hours
+    //     startTime: new Date("2024-01-15T09:00:00Z"),
+    //     dueDate: new Date("2024-01-20T23:59:59Z"),
+    //     status: "active",
+    //     maxAttempts: 3,
+    //     problems: [
+    //         {
+    //             _id: "674a1b2c3d4e5f6789012346",
+    //             title: "Two Sum",
+    //             difficulty: "easy",
+    //             points: 100,
+    //             order: 1,
+    //             tags: ["array", "hash-table"]
+    //         },
+    //         {
+    //             _id: "674a1b2c3d4e5f6789012347",
+    //             title: "Binary Tree Traversal",
+    //             difficulty: "medium",
+    //             points: 150,
+    //             order: 2,
+    //             tags: ["tree", "recursion", "dfs"]
+    //         },
+    //         {
+    //             _id: "674a1b2c3d4e5f6789012348",
+    //             title: "Merge Sort Implementation",
+    //             difficulty: "medium",
+    //             points: 200,
+    //             order: 3,
+    //             tags: ["sorting", "divide-conquer", "recursion"]
+    //         },
+    //         {
+    //             _id: "674a1b2c3d4e5f6789012349",
+    //             title: "Graph Shortest Path",
+    //             difficulty: "hard",
+    //             points: 250,
+    //             order: 4,
+    //             tags: ["graph", "dijkstra", "dynamic-programming"]
+    //         }
+    //     ]
+    // };
 
-    const currentAssignment = assignment || dummyAssignment;
+    const currentAssignment = assignment;
     const problems = assignmentProblems.length > 0 ? assignmentProblems : (currentAssignment.problems || []);
-    console.log(problems)
+    // console.log(problems)
     const totalProblems = problems.length;
     const totalPoints = problems.reduce((sum, problem) => sum + (problem.points || 0), 0);
     
