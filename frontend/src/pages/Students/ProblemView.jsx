@@ -64,10 +64,8 @@ const ProblemView = () => {
 
     // Separate effect to handle currentProblem and code initialization
     useEffect(() => {
-        // console.log(assignment)
         if (assignment && assignment.problems && assignment.problems.length > 0 && !currentProblem) {
             const firstProblem = assignment.problems[0];
-            console.log(firstProblem + " firstProblem ")
             setCurrentProblem(firstProblem);
             setCode(firstProblem.defaultCode?.[language] || '');
         } else if (currentProblem && currentProblem.defaultCode) {

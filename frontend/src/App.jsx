@@ -9,8 +9,8 @@ import { ProblemView } from "./pages";
 // import Leaderboard from "./pages/Leaderboard";
 // import Groups from "./pages/Groups";
 // import Practice from "./pages/Practice";
-import { StudentLogin } from "./pages";
-import { StudentRegister } from "./pages";
+import { StudentLogin, StudentRegister } from "./pages";
+import { PageNotFound, DevelopmentInProgress } from "./pages";
 // import InstructorLogin from "./pages/auth/InstructorLogin";
 // import InstructorRegister from "./pages/auth/InstructorRegister";
 import { InstructorDashboard } from "./pages";
@@ -49,6 +49,10 @@ const router = createBrowserRouter(
           {/* <Route path="/instructor/groups" element={<Groups />} /> */}
         </Route>
       </Route>
+
+      {/* Utility Pages - Available to all users */}
+      <Route path="/development" element={<DevelopmentInProgress />} />
+      <Route path="*" element={<PageNotFound />} />
     </>
   )
 );
